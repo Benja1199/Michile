@@ -1,21 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { useNavigation } from '@react-navigation/native'; // Importar useNavigation
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-// Configuración de íconos de Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
 
 export default function LocationPicker() {
   const [location, setLocation] = useState(null);
@@ -30,7 +17,12 @@ export default function LocationPicker() {
         return;
       }
       let loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc);
+      setLocation({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
     })();
   }, []);
 
@@ -49,19 +41,23 @@ export default function LocationPicker() {
 
       {/* Sección del mapa */}
       <View style={styles.mapContainer}>
-        {Platform.OS === 'web' ? (
-          location ? (
-            <MapContainer center={[location.coords.latitude, location.coords.longitude]} zoom={13} style={styles.map}>
-              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker position={[location.coords.latitude, location.coords.longitude]}>
-                <Popup>¡Estás aquí!</Popup>
-              </Marker>
-            </MapContainer>
-          ) : (
-            <Text style={styles.loadingText}>{errorMsg || 'Cargando ubicación...'}</Text>
-          )
+        {location ? (
+          <MapView
+            style={styles.map}
+            region={location}
+            showsUserLocation={true}
+          >
+            <Marker
+              coordinate={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+              }}
+              title="¡Estás aquí!"
+              description="Tu ubicación actual"
+            />
+          </MapView>
         ) : (
-          <Text>Funcionalidad para móviles no implementada en este ejemplo.</Text>
+          <Text style={styles.loadingText}>{errorMsg || 'Cargando ubicación...'}</Text>
         )}
       </View>
     </View>
