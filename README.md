@@ -14,3 +14,5 @@ sus objetivos son:
 tomando en cuenta lo que se lleva y lo que falta la aplicacion esta aproximadamente entre 50%-60% ya que solo falta conectar la base de datos para aplicar las ultimas funciones de la app.
 ademas deje 2 imagenes en las cuales los botones estan funcionando en navigation y el mapa muestra mi ubicacion actual.
 la camara la verdad no se si este funcionando por temas de mi telefono que no me deja abrir la app pero al abrir en el navegador web me redirige directamente a subir alguna foto.
+
+Deje 2 carpetas en archivos .zip porque github no me dejaba subir la carpeta asi que los transforme y logre subirlos completos
